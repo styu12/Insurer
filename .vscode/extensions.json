@@ -2,6 +2,8 @@
   "recommendations": [
     "arcanis.vscode-zipfs",
     "esbenp.prettier-vscode",
-    "dbaeumer.vscode-eslint"
+    "dbaeumer.vscode-eslint",
+    "csstools.postcss",
+    "bradlc.vscode-tailwindcss"
   ]
 }

@@ -6,12 +6,44 @@ export const customerRoutes = async (
   server: FastifyInstance,
   options: FastifyPluginOptions
 ) => {
-  server.get('/', async (request, reply) => {
+  server.get('/',
+    {
+      schema: {
+        tags: ['customers'],
+        description: 'list all customers',
+        summary: 'list all customers',
+        response: {
+          200: {
+            description: 'Succesful response',
+            type: 'array',
+            items: server.getSchema('Customer')
+          }
+        }
+      }
+    },
+    async (request, reply) => {
     const { rows } = await server.pg.query('SELECT * FROM customers')
     reply.send(rows)
   })
 
-  server.get('/:id', async (request, reply) => {
+  server.get('/:id',
+    {
+      schema: {
+        tags: ['customers'],
+        description: 'get a customer by id',
+        summary: 'get a customer by id',
+        params: {
+          type: 'object',
+          properties: {
+            id: { type: 'string' }
+          }
+        },
+        response: {
+          200: server.getSchema('Customer'),
+        }
+      }
+    },
+    async (request, reply) => {
     const { id } = request.params as { id: string }
     const { rows } = await server.pg.query(
       'SELECT * FROM customers WHERE id = $1',
@@ -24,7 +56,27 @@ export const customerRoutes = async (
     }
   })
 
-  server.post('/', async (request, reply) => {
+  server.post('/',
+    {
+      schema: {
+        tags: ['customers'],
+        description: 'create a customer',
+        summary: 'create a customer',
+        body: {
+          type: 'object',
+          properties: {
+            name: { type: 'string' },
+            email: { type: 'string' },
+            phone: { type: 'string' },
+            address: { type: 'string' },
+          }
+        },
+        response: {
+          200: server.getSchema('Customer'),
+        }
+      }
+    },
+    async (request, reply) => {
     const { name, email, phone, address } = request.body as Customer
     const { rows } = await server.pg.query(
       'INSERT INTO customers (name, email, phone, address) VALUES ($1, $2, $3, $4) RETURNING *',
@@ -33,7 +85,33 @@ export const customerRoutes = async (
     return rows[0]
   })
 
-  server.put('/:id', async (request, reply) => {
+  server.put('/:id',
+    {
+      schema: {
+        tags: ['customers'],
+        description: 'update a customer by id',
+        summary: 'update a customer by id',
+        params: {
+          type: 'object',
+          properties: {
+            id: { type: 'string' }
+          }
+        },
+        body: {
+          type: 'object',
+          properties: {
+            name: { type: 'string' },
+            email: { type: 'string' },
+            phone: { type: 'string' },
+            address: { type: 'string' },
+          }
+        },
+        response: {
+          200: server.getSchema('Customer'),
+        }
+      }
+    },
+    async (request, reply) => {
     const { id } = request.params as { id: string }
     const { name, email, phone, address } = request.body as Customer
     const { rows } = await server.pg.query(
@@ -47,7 +125,30 @@ export const customerRoutes = async (
     }
   })
 
-  server.delete('/:id', async (request, reply) => {
+  server.delete('/:id',
+    {
+      schema: {
+        tags: ['customers'],
+        description: 'delete a customer by id',
+        summary: 'delete a customer by id',
+        params: {
+          type: 'object',
+          properties: {
+            id: { type: 'string' }
+          }
+        },
+        response: {
+          200: {
+            description: 'Succesful response',
+            type: 'object',
+            properties: {
+              message: { type: 'string' },
+            },
+          }
+        }
+      }
+    },
+    async (request, reply) => {
     const { id } = request.params as { id: string }
     await server.pg.query('DELETE FROM customers WHERE id = $1 RETURNING *', [
       id,
@@ -55,7 +156,33 @@ export const customerRoutes = async (
     reply.send({ message: 'Customer deleted' })
   })
 
-  server.post('/:id/contracts', async (request, reply) => {
+  server.post('/:id/contracts',
+    {
+      schema: {
+        tags: ['customers'],
+        description: 'create a contract for a customer by id',
+        summary: 'create a contract for a customer by id',
+        params: {
+          type: 'object',
+          properties: {
+            id: { type: 'string' }
+          }
+        },
+        body: {
+          type: 'object',
+          properties: {
+            productId: { type: 'number' },
+            startDate: { type: 'string' },
+            renewalDate: { type: 'string' },
+            claimDate: { type: 'string' },
+          }
+        },
+        response: {
+          200: server.getSchema('Contract'),
+        }
+      }
+    },
+    async (request, reply) => {
     const { id } = request.params as { id: string }
     const { productId, startDate, renewalDate, claimDate } =
       request.body as Contract

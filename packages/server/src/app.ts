@@ -1,6 +1,7 @@
 import fastify from 'fastify'
 import fastifyEnv from '@fastify/env'
 import postgresConnector from './plugins/postgres'
+import fastifySwagger from './plugins/swagger'
 import routes from './routes'
 
 const server = fastify({
@@ -43,6 +44,7 @@ server
   })
 
 server.register(postgresConnector)
+server.register(fastifySwagger)
 server.register(routes)
 
 export default server

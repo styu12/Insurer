@@ -11,7 +11,34 @@ export const notificationRoutes = async (
     contractStartDate: string // 보험 계약 시작일
     customerName: string // 고객 이름
   }
-  server.post('/email', async (request, reply) => {
+  server.post('/email',
+    {
+      schema: {
+        tags: ['notifications'],
+        description: 'send an email notification',
+        summary: 'send an email notification',
+        body: {
+          type: 'object',
+          properties: {
+            to: { type: 'string' },
+            subject: { type: 'string' },
+            contractStartDate: { type: 'string' },
+            customerName: { type: 'string' },
+          },
+        },
+        response: {
+          200: {
+            description: 'Succesful response',
+            type: 'object',
+            properties: {
+              success: { type: 'boolean' },
+              message: { type: 'string' },
+            },
+          }
+        }
+      }
+    },
+    async (request, reply) => {
     const { to, subject, contractStartDate, customerName } =
       request.body as EmailRequestBody
 

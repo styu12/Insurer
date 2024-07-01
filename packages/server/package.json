@@ -11,6 +11,8 @@
   "dependencies": {
     "@fastify/env": "^4.3.0",
     "@fastify/postgres": "^5.2.2",
+    "@fastify/swagger": "^8.14.0",
+    "@fastify/swagger-ui": "^4.0.0",
     "fastify": "^4.27.0",
     "fastify-plugin": "^4.5.1",
     "nodemailer": "^6.9.13",

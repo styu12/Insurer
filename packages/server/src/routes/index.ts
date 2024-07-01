@@ -8,9 +8,6 @@ const routes = async (
   server: FastifyInstance,
   options: FastifyPluginOptions
 ) => {
-  server.get('/', async (request, reply) => {
-    return { hello: 'world' }
-  })
   server.get('/health', async (request, reply) => {
     return { info: 'This is for health check' }
   })
